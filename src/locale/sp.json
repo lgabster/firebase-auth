@@ -1,0 +1,12 @@
+{
+    "fullName": "nombre completo",
+    "email": "Email",
+    "password": "clave",
+    "login": "Acceso",
+    "register": "Registrarse",
+    "agree to the terms and conditions" : "Estar de acuerdo con los términos y condiciones",
+    "registration": "Registro",
+    "settings": "Ajustes",
+    "log": "Iniciar sesión",
+    "google maps": "mapas de Google"
+}
