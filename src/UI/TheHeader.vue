@@ -5,25 +5,47 @@
                 <router-link to="/">Vue App</router-link>
             </h1>
             <ul>
+              <template v-if="isAuthenticated">
                 <li>
-                    <router-link to="/register">{{ $t('registration') }}</router-link>
+                  <router-link to="/history">{{ $t('log') }}</router-link>
                 </li>
                 <li>
-                    <router-link to="/login">{{ $t('login') }}</router-link>
+                  <router-link to="/map">{{ $t('google maps') }}</router-link>
                 </li>
                 <li>
-                    <router-link to="/history">{{ $t('log') }}</router-link>
+                  <router-link to="/settings">{{ $t('settings') }}</router-link>
                 </li>
                 <li>
-                    <router-link to="/map">{{ $t('google maps') }}</router-link>
+                  <button @click="signOutUser">{{ $t('signOut') }}</button>
                 </li>
-                <li>
-                    <router-link to="/settings">{{ $t('settings') }}</router-link>
-                </li>
+              </template>
+              <template v-else>
+                  <li>
+                      <router-link to="/register">{{ $t('registration') }}</router-link>
+                  </li>
+                  <li>
+                      <router-link to="/login">{{ $t('login') }}</router-link>
+                  </li>
+                </template>
             </ul>
         </nav>
     </header>
 </template>
+
+<script>
+import { signOutUser, isAuthenticated } from '../auth'
+
+export default {
+  methods: {
+    signOutUser
+  },
+  computed: {
+    isAuthenticated () {
+      return isAuthenticated.value
+    }
+  }
+}
+</script>
 
 
 <style scoped>
@@ -36,12 +58,14 @@ header {
   align-items: center;
 }
 
-header a {
+header a,
+header button {
   text-decoration: none;
   color: #f391e3;
   display: inline-block;
   padding: 0.75rem 1.5rem;
   border: 1px solid transparent;
+  background: none;
 }
 
 a:active,

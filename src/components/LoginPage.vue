@@ -1,50 +1,57 @@
 <template>
     <base-card>
-      <form v-on:submit.prevent="validateData">
-        <div class="form-control">
-            <label for="email">{{ $t('email') }}</label>
-            <input type="text" id="email" v-model.trim="form.email">
-            <p v-if="!emailIsValid" class="errors">Your e-mail is required</p>
-        </div>
-        <div class="form-control">
-            <label for="password">{{ $t('password') }}</label>
-            <input type="password" id="password" v-model.trim="form.password">
-            <p v-if="!passwordIsValid" class="errors">Password is required</p>
-        </div>
-      </form>
-      <button :disabled="!formIsValid" type="button" class="btn btn-primary">{{ $t('login') }}</button>
+        <form v-on:submit.prevent="submitForm">
+            <div class="form-control">
+                <label for="email">{{ $t('email') }}</label>
+                <input type="text" id="email" v-model.trim="form.email">
+                <p v-if="!emailIsValid" class="errors">Your e-mail is required</p>
+            </div>
+            <div class="form-control">
+                <label for="password">{{ $t('password') }}</label>
+                <input type="password" id="password" v-model.trim="form.password">
+                <p v-if="!passwordIsValid" class="errors">Password is required</p>
+            </div>
+            <button :disabled="!formIsValid" type="submit" class="btn btn-primary">{{ $t('login') }}</button>
+            </form>
     </base-card>
 </template>
 
 <script>
+import { signIn } from "../auth";
+
 export default {
     data() {
-      return {
-        form: {
-          email: null,
-          password: null
+        return {
+            form: {
+                email: '',
+                password: ''
+            }
         }
-      }
     },
 
     methods: {
-      validateData() {
-        if (this.formIsValid) {
-          console.log('form is valid', this.form)
-        } else {
-             console.log('form is invalid')
-          }
-
-        this.$router.replace('/history');
-      }
+        submitForm() {
+            if (this.formIsValid) {
+                console.log('form is valid', this.form)
+                signIn(this.form.email, this.form.password)
+                    .then(() => {
+                        this.$router.replace('/history');
+                    })
+                    .catch((error) => {
+                        console.error(error)
+                    })
+            } else {
+                console.log('form is invalid')
+            }
+        }
     },
 
     computed: {
-      emailIsValid() {
+        emailIsValid() {
             return !!this.form.email;
         },
         passwordIsValid() {
-            return this.form.password > 6;
+            return this.form.password.length > 6;
         },
         formIsValid() {
             return this.emailIsValid && this.passwordIsValid;

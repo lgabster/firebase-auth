@@ -1,6 +1,6 @@
 <template>
     <base-card>
-       <form v-on:submit.prevent="submitForm">
+    <form v-on:submit.prevent="submitForm">
         <div class="form-control">
             <label for="full name">{{ $t('fullName') }}</label>
             <input type="text" id="full name" v-model.trim="form.fullName">
@@ -16,21 +16,23 @@
             <input type="password" id="password" v-model.trim="form.password">
             <p v-if="!passwordIsValid" class="errors">Password is required</p>
         </div>
-       </form>
-       <button :disabled="!formIsValid" type="button" class="btn btn-primary">{{ $t('register') }}</button>
+        <button :disabled="!formIsValid" type="submit" class="btn btn-primary">{{ $t('register') }}</button>
+    </form>
     </base-card>
 </template>
 
 <script>
+import { createUser } from "../auth"
+
 export default {
     name: 'registerPage',
-    
+
     data() {
         return {
             form: {
-                fullName: null,
-                email: null,
-                password: null
+                fullName: '',
+                email: '',
+                password: ''
             }
         }
     },
@@ -39,25 +41,19 @@ export default {
         submitForm() {
             if (this.formIsValid) {
                 console.log('form is valid', this.form)
+                createUser(this.form.email, this.form.password)
+                    .then(() => {
+                        this.$router.push('/login')
+                    })
+                    .catch((error) => {
+                        console.log(error)
+                    })
             } else {
                 console.log('form is invalid')
             }
-
-            /* this.$router.replace('/login'); */
-
-            fetch('https://task-1-68e73-default-rtdb.europe-west1.firebasedatabase.app/register.json', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    name: this.fullName,
-                }),
-            });
-
-        },
+        }
     },
-    
+
     computed: {
         fullNameIsValid() {
             return !!this.form.fullName;
@@ -66,7 +62,7 @@ export default {
             return !!this.form.email;
         },
         passwordIsValid() {
-            return this.form.password > 6;
+            return this.form.password?.length > 6;
         },
         formIsValid() {
             return this.fullNameIsValid && this.emailIsValid && this.passwordIsValid;
@@ -120,7 +116,7 @@ margin: auto;
 }
 
 .errors {
-  color: red;
-  font-weight: bold;
+color: red;
+font-weight: bold;
 }
 </style>

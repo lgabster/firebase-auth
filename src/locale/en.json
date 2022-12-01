@@ -3,6 +3,7 @@
     "email": "E-mail",
     "password": "Password",
     "login": "Login",
+    "signOut": "Sign Out",
     "register": "Register",
     "agree to the terms and conditions" : "Agree to the terms and conditions",
     "registration": "Registration",

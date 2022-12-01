@@ -6,17 +6,25 @@ import HistoryPage from './components/HistoryPage.vue';
 import LoginPage from './components/LoginPage.vue';
 import RegisterPage from './components/RegisterPage.vue';
 
+import { isAuthenticated } from './auth';
+
 
 const router = createRouter({
     history: createWebHistory(),
     routes: [
         { path: '/', redirect: '/login'},
-        { path: '/settings', name: 'changeLanguage', component: ChangeLanguage },
-        { path: '/map', name: 'googleMaps', component: GoogleMap },
-        { path: '/history', name: 'historyPage', component: HistoryPage },
+        { path: '/settings', name: 'changeLanguage', component: ChangeLanguage, meta: { protected: true } },
+        { path: '/map', name: 'googleMaps', component: GoogleMap, meta: { protected: true } },
+        { path: '/history', name: 'historyPage', component: HistoryPage, meta: { protected: true } },
         { path: '/login', name: 'loginPage', component: LoginPage },
         { path: '/register', name: 'registerPage', component: RegisterPage },
     ],
 });
+
+router.beforeEach(async (to) => {
+    if (!isAuthenticated.value && to.meta.protected && to.name !== 'loginPage') {
+        return { name: 'loginPage' }
+    }
+})
 
 export default router;
